@@ -3,6 +3,7 @@
 
 
 
+
 board structure: Use array, [[]]
 enum to represent an arbitrary piece or empty; 
 Utilize a simple threat_buffer that is recomputed every move
@@ -89,25 +90,39 @@ pub mod chess_api{
         use super::*;
 
         pub fn generate_threat_static(li : &[(i32, i32)], board : &Board_state, buff : &mut [[bool; 8]; 8]){
-            let t = li[0];
             for (row, col) in li.iter() {
                 if(row < &0 || row > &7 || col < &0 || col > &7){ continue;}
                 
                 let at : &Cell = &board._board_types[*row as usize][*col as usize];
-                if let Cell::None = at {
-                    buff[*row as usize][*col as usize] = true;
-                }
+                buff[*row as usize][*col as usize] = true;
             }
         }
+
+        pub fn generate_threat_dir(row : i32, col : i32, dir : (i32, i32), board : &Board_state, buff : &mut [[bool; 8]; 8]){
+            while(row >= 0 && row < 8 && col >= 0 && col < 8){
+                let at : &Cell = &board._board_types[row as usize][col as usize];
+                buff[row as usize][col as usize] = true;
+                if let Cell::None = at{}else{
+                    break;
+                }
+                
+                row += dir.0;
+                col += dir.1;
+            }
+        }
+
     }
 
     pub mod Knight{
         use super::Board_state;
         use super::util;
+        use super::util::generate_threat_static;
 
+        /* 
         pub fn generate_simple(mut buff: &[u64]) -> u64{
             
         }
+        */
 
         pub fn generate_threat(row : i32, col : i32, board : &Board_state, buff : &mut [[bool; 8]; 8]){
             let li : [(i32, i32); 8] = [
@@ -123,20 +138,95 @@ pub mod chess_api{
                 (row-2, col-1),
                 (row-1, col-2)
             ];
-
-            
-
-
+            generate_threat_static(&li, board, buff);
         }
-
+        /* 
         pub fn generate() -> u64{
             
+        }
+        */
+    }
+
+    pub mod Bishop{
+        use super::Board_state;
+        use super::util::generate_threat_dir;
+
+        pub fn generate_threat(row : i32, col : i32, board : &Board_state, buff : &mut [[bool; 8]; 8]){
+            let dir_li : [(i32,i32); 4] = [
+                (-1,-1),
+                (-1,1),
+                (1,-1),
+                (1,1)
+            ];
+            for dir in dir_li{
+                generate_threat_dir(row, col, dir, board, buff);
+            }
+        }
+    }
+
+    pub mod Rook{
+        use super::Board_state;
+        use super::util::generate_threat_dir;
+
+        pub fn generate_threat(row : i32, col : i32, board : &Board_state, buff : &mut [[bool; 8]; 8]){
+            let dir_li : [(i32, i32); 4] = [
+                (1,0),
+                (-1,0),
+                (0,1),
+                (0,-1)
+            ];
+
+            for dir in dir_li{
+                generate_threat_dir(row, col, dir, board, buff);
+            }
+        }
+    }
+
+    pub mod Queen{
+        use super::Board_state;
+        use super::util::generate_threat_dir;
+
+        pub fn generate_threat(row : i32, col : i32, board : &Board_state, buff : &mut [[bool; 8]; 8]){
+            let dir_li : [(i32, i32); 8] = [
+                (1, 0),
+                (-1,0),
+                (0,1),
+                (0,-1),
+                (-1, -1),
+                (-1,1),
+                (1,-1),
+                (1,1)
+            ];
+
+            for dir in dir_li{
+                generate_threat_dir(row, col, dir, board, buff);
+            }
         }
     }
 
     pub mod King{
-        
+        use super::Board_state;
+        use super::util::generate_threat_static;
+
+        pub fn generate_threat(row : i32, col : i32, board : &Board_state, buff : &mut [[bool; 8]; 8]){
+            let li : [(i32, i32); 8] = [
+                (row+1, col+1),
+                (row-1, col+1),
+                (row+1, col-1),
+                (row-1, col-1),
+                
+                (row-1, col),
+                (row, col-1),
+                (row+1, col),
+                (row, col+1)
+            ];
+
+            generate_threat_static(&li, board, buff);
+        }
     }
+
+    
+
     
 }
 
