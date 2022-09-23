@@ -21,9 +21,7 @@ implament a move_check function that determines if the move is valid(simulate mo
 #[allow(unused_parens)]
 #[allow(dead_code)]
 pub mod chess_api{
-    use std::{slice, mem::swap};
-
-    use self::{util::construct_move_buffer, Move_util::get_move_list};
+    use self::{Util::construct_move_buffer, Move_util::get_move_list};
     
     pub const WHITE : bool = false;
     pub const BLACK : bool = true;
@@ -192,7 +190,7 @@ pub mod chess_api{
     }
 
     pub mod Move_util{
-        use super::{*, Board::update_threat_buffer, util::{move_check, construct_move_buffer}};
+        use super::{*, Board::update_threat_buffer, Util::{move_check, construct_move_buffer}};
         use std::io::*;
 
         
@@ -278,7 +276,7 @@ pub mod chess_api{
             };
         }
 
-        pub fn move_update(board : &mut Board_state, mv : &Move){
+        pub fn make_move(board : &mut Board_state, mv : &Move){
             match mv.typ {
                 Move_type::Move => move_update_move(board, mv),
                 Move_type::Capture => move_update_capture(board, mv),
@@ -327,7 +325,7 @@ pub mod chess_api{
         }
     }
 
-    pub mod util{
+    pub mod Util{
         use std::i32;
         use super::*;
         use super::Move_util::*;
@@ -358,7 +356,7 @@ pub mod chess_api{
 
             //Make a copy of the board and simulate a move, update_threat_buffer, check if check.
             let mut board_copy = *board;
-            move_update(&mut board_copy, mv);
+            make_move(&mut board_copy, mv);
             return !scheck(&board_copy, mv.color);
         }
 
@@ -447,7 +445,7 @@ pub mod chess_api{
     pub mod Knight{
         use super::{Board_state, MAX_MOVES};
         use super::Move;
-        use super::util::*;
+        use super::Util::*;
 
         pub fn generate_threat(row : i32, col : i32, board : &mut Board_state, color : bool){
             let li : [(i32, i32); 8] = [
@@ -494,7 +492,7 @@ pub mod chess_api{
         use super::MAX_MOVES;
         use super::Board_state;
         use super::Move;
-        use super::util::*;
+        use super::Util::*;
 
         pub fn generate_threat(row : i32, col : i32, board : &mut Board_state, color : bool){
             let dir_li : [(i32,i32); 4] = [
@@ -527,7 +525,7 @@ pub mod chess_api{
 
     pub mod Rook{
         use super::Board_state;
-        use super::util::*;
+        use super::Util::*;
         use super::Move;
         use super::MAX_MOVES;
 
@@ -562,7 +560,7 @@ pub mod chess_api{
 
     pub mod Queen{
         use super::Board_state;
-        use super::util::*;
+        use super::Util::*;
         use super::MAX_MOVES;
         use super::Move;
 
@@ -606,7 +604,7 @@ pub mod chess_api{
 
     pub mod King{
         use super::Board_state;
-        use super::util::*;
+        use super::Util::*;
         use super::MAX_MOVES;
         use super::Move;
 
@@ -644,7 +642,7 @@ pub mod chess_api{
     }
 
     pub mod Pawn{
-        use super::util::*;
+        use super::Util::*;
         use super::*;
         
         pub fn generate_threat(row : i32, col : i32, board : &mut Board_state, color : bool){

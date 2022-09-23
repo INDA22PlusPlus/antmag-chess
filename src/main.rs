@@ -9,7 +9,7 @@ mod test{
 
     use test_crate::chess_api::*;
     use test_crate::chess_api::Board::*;
-    use test_crate::chess_api::util::*;
+    use test_crate::chess_api::Util::*;
     use test_crate::chess_api::Queen::*;
     use test_crate::chess_api::Move_util::*;
     use test_crate::chess_api::Testing_interface::*;
@@ -304,11 +304,11 @@ mod test{
         assert_eq!(is_valid_move(&mut b, &b_king_mv), false);
 
         //Ignoring the turn-turn ordering
-        move_update(&mut b, &b_pawn_mv_1);
-        move_update(&mut b, &b_pawn_mv_2);
-        move_update(&mut b, &w_pawn_mv_1);
-        move_update(&mut b, &w_queen_mv); //This move is invalid
-        move_update(&mut b, &b_king_mv);
+        make_move(&mut b, &b_pawn_mv_1);
+        make_move(&mut b, &b_pawn_mv_2);
+        make_move(&mut b, &w_pawn_mv_1);
+        make_move(&mut b, &w_queen_mv); //This move is invalid
+        make_move(&mut b, &b_king_mv);
 
         b._board_types[0][4] = Cell::Queen;
         b._board_color[0][4] = true;
@@ -317,6 +317,4 @@ mod test{
         assert_eq!(is_scheck_mate(&mut b, BLACK), true);
         assert_eq!(is_scheck_mate(&mut b, WHITE), false);
     }
-
-
 }
