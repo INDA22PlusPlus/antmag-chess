@@ -91,7 +91,7 @@ mod test{
         let li = [
             (0,5),
         ];
-
+        
         let mut move_buffer:[Move; MAX_MOVES] = construct_move_buffer();
 
         let cnt = generate_moves_simple_static((1,5), &li, &mut b, &mut move_buffer);

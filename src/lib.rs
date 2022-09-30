@@ -1,9 +1,5 @@
 
 /*
-
-
-
-
 board structure: Use array, [[]]
 enum to represent an arbitrary piece or empty; 
 Utilize a simple threat_buffer that is recomputed every move
@@ -15,7 +11,6 @@ todo: Scheck mate
 
 Implament a generate_moves_simple for each piece type
 implament a move_check function that determines if the move is valid(simulate move and recompute threat buffer)
-
 */
 
 #[allow(unused_parens)]
@@ -25,7 +20,7 @@ pub mod chess_api{
     
     pub const WHITE : bool = false;
     pub const BLACK : bool = true;
-    pub const MAX_MOVES : usize = 32;
+    pub const MAX_MOVES : usize = 32; //This should be an upper-bound
 
     #[derive(Clone, Copy)]
     pub struct Board_state{
@@ -33,9 +28,9 @@ pub mod chess_api{
         pub _board_types : [[Cell; 8]; 8],
         pub _board_hasmoved : [[bool; 8]; 8],
         pub _board_color : [[bool; 8]; 8],
-
+        
         pub threat_buff : [[[bool; 8]; 8]; 2], //is king in scheck, only public for testing
-        turn : bool, //0 is white, 1 is black
+        pub turn : bool, //0 is white, 1 is black
         castling: [bool; 2],
         
         pub king_pos : [(usize, usize); 2],
@@ -368,7 +363,7 @@ pub mod chess_api{
                 board.threat_buff[color as usize][*row as usize][*col as usize] = true;
             }
         }
-
+        
         pub fn generate_threat_dir(mut row : i32, mut col : i32, dir : (i32, i32), board : &mut Board_state, color : bool){
             row += dir.0;
             col += dir.1;
@@ -731,7 +726,6 @@ pub struct Board_state{
         
         king_pos : [(u8, u8); 2],
     }
-
 */
 
 
